@@ -1,21 +1,5 @@
-resource "aws_iam_role" "lambda_exec" {
-  name = "lambda_exec_role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [{
-      Action = "sts:AssumeRole",
-      Effect = "Allow",
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      }
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role       = aws_iam_role.lambda_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+data "aws_iam_role" "lambda_exec_role" {
+  name = "HelloWorld_Iam_Role"
 }
 
 data "archive_file" "lambda_zip" {
@@ -26,7 +10,7 @@ data "archive_file" "lambda_zip" {
 
 resource "aws_lambda_function" "hello_lambda" {
   function_name = var.function_name
-  role          = aws_iam_role.lambda_exec.arn
+  role          = data.aws_iam_role.lambda_exec_role.arn
   handler       = "hello_world.lambda_handler"
   runtime       = "python3.12"
 
