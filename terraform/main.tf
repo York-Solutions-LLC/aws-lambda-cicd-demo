@@ -1,5 +1,5 @@
 data "aws_iam_role" "lambda_exec_role" {
-  name = "HelloWorld_Iam_Role"
+  name = "HelloWorld_IAM_Role_AWSAcct"
 }
 
 data "archive_file" "lambda_zip" {
