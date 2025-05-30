@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  id-token: write 
+  id-token: write
   contents: read
 
 jobs:
@@ -26,6 +26,10 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::318898032469:role/HelloWorld_IAM_Role_WebID_CICD_GitHuActions
           aws-region: us-east-2
+
+      - name: Delete existing Lambda function (if exists)
+        run: |
+          aws lambda delete-function --function-name hello_lambda || echo "No existing function to delete"
 
       - name: Terraform Init
         run: terraform init
