@@ -1,5 +1,5 @@
 data "aws_iam_role" "lambda_exec_role" {
-  name = "HelloWorld_IAM_Role_AWSAcct"
+  name = "HelloWorld_IAM_Role_WebID_CICD_GitHuActions"
 }
 
 data "archive_file" "lambda_zip" {
