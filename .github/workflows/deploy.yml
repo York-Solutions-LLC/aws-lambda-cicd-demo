@@ -1,44 +1,55 @@
+# Name of the workflow shown in the GitHub Actions UI
 name: Deploy Lambda with Terraform
 
+# Trigger the workflow when code is pushed to the "main" branch
 on:
   push:
     branches: [main]
 
+# Set permissions for the workflow
 permissions:
-  id-token: write
-  contents: read
+  id-token: write   # Allows GitHub to request an OIDC token to authenticate with AWS
+  contents: read    # Allows workflow steps to read repository files
 
+# Define the collection of jobs (sets of steps) to run in this workflow
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  deploy:    # Define a job named "deploy"
+    runs-on: ubuntu-latest    # Run the job on the latest Ubuntu environment
 
     steps:
+      # Step 1: Check out the code from the GitHub repo into the workflow environment
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Set up Terraform CLI in the workflow environment
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.5.6
+          terraform_version: 1.5.6  # Specify the Terraform version to use
 
+      # Step 3: Authenticate with AWS using OIDC and assume the deployment role
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::318898032469:role/HelloWorld_IAM_Role_WebID_CICD_GitHuActions
-          aws-region: us-east-2
+          role-to-assume: arn:aws:iam::318898032469:role/HelloWorld_IAM_Role_WebID_CICD_GitHuActions  # IAM role to assume for deployment
+          aws-region: us-east-2  # AWS region where the resources will be deployed
 
+      # Step 4 (Optional): Clean up any existing Lambda function to avoid "Function already exists" errors
       - name: Delete existing Lambda function (if exists)
         run: |
           aws lambda delete-function --function-name hello_lambda || echo "No existing function to delete"
 
+      # Step 5: Initialize the Terraform working directory and download providers
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terraform
+        working-directory: ./terraform # Set working directory to where Terraform files are
 
+      # Step 6: Show a preview of the changes Terraform will make
       - name: Terraform Plan
         run: terraform plan
         working-directory: ./terraform
 
+      # Step 7: Apply the planned changes to deploy infrastructure automatically
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve  # -auto-approve skips interactive approval
         working-directory: ./terraform
