@@ -11,6 +11,7 @@ This setup is used to test IAM roles, validate CI/CD security configurations, an
 
 ## Project Structure
 aws-lambda-cicd-demo/
+
 ├── .github/workflows/deploy.yml # GitHub Actions deployment pipeline
 
 ├── lambda/hello_world.py # Python Lambda function
