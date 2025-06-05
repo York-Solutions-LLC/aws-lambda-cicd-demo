@@ -12,13 +12,21 @@ This setup is used to test IAM roles, validate CI/CD security configurations, an
 ## Project Structure
 aws-lambda-cicd-demo/
 ├── .github/workflows/deploy.yml # GitHub Actions deployment pipeline
+
 ├── lambda/hello_world.py # Python Lambda function
+
 ├── terraform/ # Terraform configuration
+
 │ ├── main.tf # Lambda resource definitions
+
 │ ├── variables.tf # Reusable variables (e.g. region, name)
+
 │ ├── outputs.tf # Useful outputs like function name
+
 │ └── provider.tf # AWS provider configuration
+
 ├── README.md # Project documentation
+
 └── .gitignore # Ignore zip packages and Terraform state
 
 ## Steps Taken
